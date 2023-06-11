@@ -1,12 +1,15 @@
 <?php
 
 require_once('DataService.php');
+require_once('Repository/CurrencyRepository.php');
 
-$dataService = new DataService("https://api.nbp.pl/api/exchangerates/tables/D");
+$dataService = new DataService("https://api.nbp.pl/api/exchangerates/tables/A");
 try {
     $data = $dataService->getData();
 } catch (Exception $e) {
     echo $e->getMessage();
     die();
 }
-$decodedData = json_decode($data);
+$decodedData = json_decode($data, true);
+$currencyRepository = new CurrencyRepository();
+$currencyRepository->saveOrUpdateRates($decodedData[0]['rates']);
