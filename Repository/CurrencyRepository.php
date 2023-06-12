@@ -16,6 +16,19 @@ class CurrencyRepository extends AbstractRepository
     }
 
     /**
+     * @param int $id
+     * @return array|false|null
+     */
+    public function findOneById(int $id)
+    {
+        $stmt = $this->mysqli->prepare("SELECT * FROM currency WHERE id = ?");
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+
+        return $stmt->get_result()->fetch_assoc();
+    }
+
+    /**
      * @param array $data
      * @return void
      */
