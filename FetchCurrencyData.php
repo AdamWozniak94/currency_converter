@@ -1,6 +1,6 @@
 <?php
 
-require_once('DataService.php');
+require_once('Service/DataService.php');
 require_once('Repository/CurrencyRepository.php');
 
 $dataService = new DataService("https://api.nbp.pl/api/exchangerates/tables/A");
