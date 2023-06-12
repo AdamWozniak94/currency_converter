@@ -5,11 +5,20 @@ require_once('AbstractRepository.php');
 class CurrencyRepository extends AbstractRepository
 {
 
-    public function fetchAllRows()
+    /**
+     * @return array
+     */
+    public function fetchAllRows(): array
     {
-        // TODO: Implement fetchAllRows() method.
+        $query = $this->mysqli->query("SELECT * FROM currency");
+
+        return $query->fetch_all(MYSQLI_ASSOC);
     }
 
+    /**
+     * @param array $data
+     * @return void
+     */
     public function saveOrUpdateRates(array $data)
     {
         $sql = "INSERT INTO currency (`name`, `code`, `amount`, `rate`) VALUES (?, ?, ?, ?)
