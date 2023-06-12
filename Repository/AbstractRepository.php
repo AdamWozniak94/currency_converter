@@ -10,8 +10,9 @@ abstract class AbstractRepository
 
         try {
             $this->mysqli = new mysqli("localhost", "root", "", "currency_converter");
+            $this->mysqli->set_charset("utf8mb4");
         } catch (Exception $e) {
-            echo $e->getMessage();
+            error_log($e->getMessage());
             die();
         }
     }

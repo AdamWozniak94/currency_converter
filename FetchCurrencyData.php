@@ -7,7 +7,7 @@ $dataService = new DataService("https://api.nbp.pl/api/exchangerates/tables/A");
 try {
     $data = $dataService->getData();
 } catch (Exception $e) {
-    echo $e->getMessage();
+    error_log($e->getMessage());
     die();
 }
 $decodedData = json_decode($data, true);

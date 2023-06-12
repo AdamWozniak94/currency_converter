@@ -12,7 +12,8 @@ class CurrencyRepository extends AbstractRepository
 
     public function saveOrUpdateRates(array $data)
     {
-        $sql = "INSERT INTO currency (`name`, `code`, `amount`, `rate`) VALUES (?, ?, ?, ?)";
+        $sql = "INSERT INTO currency (`name`, `code`, `amount`, `rate`) VALUES (?, ?, ?, ?)
+                ON DUPLICATE KEY UPDATE `rate`= VALUES(rate)";
         $stmt = $this->mysqli->prepare($sql);
 
         $this->mysqli->query("START TRANSACTION");
@@ -23,8 +24,7 @@ class CurrencyRepository extends AbstractRepository
                 $amount *= 100;
                 $rate *= 100;
             }
-            $rate *= 100;
-            $stmt->bind_param("ssii", $datum['currency'], $datum['code'], $amount, $rate);
+            $stmt->bind_param("ssid", $datum['currency'], $datum['code'], $amount, $rate);
             $stmt->execute();
         }
 
