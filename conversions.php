@@ -24,17 +24,17 @@
                         $currencyRows = $currencyRepository->fetchAllRows();
                         ?>
                         <h2>Kalkulator walutowy</h2>
-                        <form action="ConvertCurrency.php" method="post" class="row g-3 ms-1 mb-3">
+                        <form action="ConvertCurrency.php" method="post" class="row g-3 ms-1 mb-3" onsubmit="validateForm()">
                             <div class="col-auto">
-                                <label>
+                                <label class="form-label">
                                     Kwota
-                                    <input type="number" name="amount" step="0.01" class="form-control">
+                                    <input type="number" name="amount" step="0.01" class="form-control" required>
                                 </label>
                             </div>
                             <div class="col-auto">
-                                <label>
+                                <label class="form-label">
                                     Waluta bazowa
-                                    <select name="base_currency_code" class="form-select">
+                                    <select name="base_currency_code" id="base-currency" class="form-select" onchange="checkCodes()">
                                         <?php
                                         echo '<option selected value="PLN">PLN</option>';
                                         foreach ($currencyRows as $currencyRow) {
@@ -43,9 +43,9 @@
                                         ?>
                                     </select>
                                 </label>
-                                <label>
+                                <label class="form-label">
                                     Waluta docelowa
-                                    <select name="target_currency_code" class="form-select">
+                                    <select name="target_currency_code" id="target-currency" class="form-select" onchange="checkCodes()">
                                         <?php
                                         echo '<option value="PLN">PLN</option>';
                                         foreach ($currencyRows as $currencyRow) {
@@ -99,5 +99,28 @@
                 </div>
             </div>
         </div>
+
+        <script>
+            function checkCodes() {
+                var baseCurrency = document.getElementById("base-currency");
+                var targetCurrency = document.getElementById("target-currency");
+
+                if (baseCurrency.value === targetCurrency.value) {
+                    baseCurrency.classList.add('is-invalid');
+                    targetCurrency.classList.add('is-invalid');
+                } else {
+                    baseCurrency.classList.remove('is-invalid');
+                    targetCurrency.classList.remove('is-invalid');
+                }
+            }
+
+            function validateForm() {
+                var baseCurrency = document.getElementById("base-currency");
+                if (baseCurrency.classList.contains('is-invalid')) {
+                    alert("Kody walut muszą być inne");
+                    return false;
+                }
+            }
+        </script>
     </body>
 </html>
