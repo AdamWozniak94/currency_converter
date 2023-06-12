@@ -16,13 +16,13 @@ class CurrencyRepository extends AbstractRepository
     }
 
     /**
-     * @param int $id
+     * @param string $code
      * @return array|false|null
      */
-    public function findOneById(int $id)
+    public function findOneByCode(string $code)
     {
-        $stmt = $this->mysqli->prepare("SELECT * FROM currency WHERE id = ?");
-        $stmt->bind_param("i", $id);
+        $stmt = $this->mysqli->prepare("SELECT * FROM currency WHERE code = ?");
+        $stmt->bind_param("s", $code);
         $stmt->execute();
 
         return $stmt->get_result()->fetch_assoc();
@@ -42,10 +42,13 @@ class CurrencyRepository extends AbstractRepository
         foreach ($data as $datum) {
             $amount = 1;
             $rate = $datum['mid'];
+
+            // multiply currency while it is worth less than 0.01PLN
             while ($rate < 0.01) {
                 $amount *= 100;
                 $rate *= 100;
             }
+
             $stmt->bind_param("ssid", $datum['currency'], $datum['code'], $amount, $rate);
             $stmt->execute();
         }

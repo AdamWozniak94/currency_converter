@@ -11,22 +11,21 @@ class ConversionService
         $this->currencyRepository = new CurrencyRepository;
     }
 
-
     /**
      * @param float $amount
-     * @param int $baseCurrencyId
-     * @param int $targetCurrencyId
+     * @param string $baseCurrencyCode
+     * @param string $targetCurrencyCode
      * @return float
      */
-    public function convert(float $amount, int $baseCurrencyId, int $targetCurrencyId): float
+    public function convert(float $amount, string $baseCurrencyCode, string $targetCurrencyCode): float
     {
-        // 0 is PLN
-        if (0 == $baseCurrencyId) {
-            $result = $this->convertFromPln($amount, $targetCurrencyId);
-        } elseif (0 == $targetCurrencyId) {
-            $result = $this->convertToPln($amount, $baseCurrencyId);
+        if ("PLN" == $baseCurrencyCode) {
+            $result = $this->convertFromPln($amount, $targetCurrencyCode);
+        } elseif ("PLN" == $targetCurrencyCode) {
+            $result = $this->convertToPln($amount, $baseCurrencyCode);
         } else {
-            $result = $this->convertFromPln($this->convertToPln($amount, $baseCurrencyId), $targetCurrencyId);
+            // baseCurrency -> PLN -> targetCurrency
+            $result = $this->convertFromPln($this->convertToPln($amount, $baseCurrencyCode), $targetCurrencyCode);
         }
 
         return round($result,2);
@@ -34,24 +33,24 @@ class ConversionService
 
     /**
      * @param float $amount
-     * @param int $currencyId
+     * @param string $currencyCode
      * @return float
      */
-    private function convertFromPln(float $amount, int $currencyId): float
+    private function convertFromPln(float $amount, string $currencyCode): float
     {
-        $currency = $this->currencyRepository->findOneById($currencyId);
+        $currency = $this->currencyRepository->findOneByCode($currencyCode);
 
         return $amount / $currency['rate'] * $currency['amount'];
     }
 
     /**
      * @param float $amount
-     * @param int $currencyId
+     * @param string $currencyCode
      * @return float
      */
-    private function convertToPln(float $amount, int $currencyId): float
+    private function convertToPln(float $amount, string $currencyCode): float
     {
-        $currency = $this->currencyRepository->findOneById($currencyId);
+        $currency = $this->currencyRepository->findOneByCode($currencyCode);
 
         return $amount * $currency['rate'] / $currency['amount'];
     }

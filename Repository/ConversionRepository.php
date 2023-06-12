@@ -5,22 +5,29 @@ require_once('AbstractRepository.php');
 class ConversionRepository extends AbstractRepository
 {
 
-    public function fetchAllRows()
+    /**
+     * @return array
+     */
+    public function fetchAllRows(): array
     {
         $query = $this->mysqli->query(
-            "SELECT c.amount, bc.code AS base_currency, tc.code AS target_currency, c.result FROM conversion AS c
-                    JOIN currency AS bc ON c.base_currency_id = bc.id
-                    JOIN currency AS tc ON c.target_currency_id = tc.id"
-        );
+            "SELECT * FROM conversion");
 
         return $query->fetch_all(MYSQLI_ASSOC);
     }
 
-    public function saveNewRow(float $amount, int $baseCurrencyId, int $targetCurrencyId, float $result)
+    /**
+     * @param float $amount
+     * @param string $baseCurrencyCode
+     * @param string $targetCurrencyCode
+     * @param float $result
+     * @return void
+     */
+    public function saveNewRow(float $amount, string $baseCurrencyCode, string $targetCurrencyCode, float $result)
     {
-        $sql = "INSERT INTO conversion (`amount`, `base_currency_id`, `target_currency_id`, `result`) VALUES (?, ?, ?, ?)";
+        $sql = "INSERT INTO conversion (`amount`, `base_currency_code`, `target_currency_code`, `result`) VALUES (?, ?, ?, ?)";
         $stmt = $this->mysqli->prepare($sql);
-        $stmt->bind_param("diid", $amount, $baseCurrencyId, $targetCurrencyId, $result);
+        $stmt->bind_param("dssd", $amount, $baseCurrencyCode, $targetCurrencyCode, $result);
         $stmt->execute();
         $stmt->close();
     }
