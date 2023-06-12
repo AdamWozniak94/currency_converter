@@ -28,7 +28,7 @@
                             <div class="col-auto">
                                 <label class="form-label">
                                     Kwota
-                                    <input type="number" name="amount" step="0.01" class="form-control" required>
+                                    <input type="number" name="amount" step="0.01" min="0.01" max="1000000" class="form-control" required>
                                 </label>
                             </div>
                             <div class="col-auto">
