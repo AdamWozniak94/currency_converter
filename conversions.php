@@ -24,33 +24,44 @@
                         $currencyRows = $currencyRepository->fetchAllRows();
                         ?>
                         <h2>Kalkulator walutowy</h2>
-                        <form action="ConvertCurrency.php" method="post">
-                            <label>
-                                <input type="number" name="amount" step="0.01" placeholder="Kwota">
-                            </label><br>
-                            <label>
-                                Waluta bazowa
-                                <select name="base_currency_code">
-                                    <?php
-                                    echo '<option value="PLN">PLN</option>';
-                                    foreach ($currencyRows as $currencyRow) {
-                                        echo '<option value="'.$currencyRow['code'].'">'.$currencyRow['code'].'</option>';
-                                    }
-                                    ?>
-                                </select>
-                            </label><br>
-                            <label>
-                                Waluta docelowa
-                                <select name="target_currency_code">
-                                    <?php
-                                    echo '<option value="PLN">PLN</option>';
-                                    foreach ($currencyRows as $currencyRow) {
-                                        echo '<option value="'.$currencyRow['code'].'">'.$currencyRow['code'].'</option>';
-                                    }
-                                    ?>
-                                </select>
-                            </label><br>
-                            <input type="submit" value="Przelicz">
+                        <form action="ConvertCurrency.php" method="post" class="row g-3 ms-1 mb-3">
+                            <div class="col-auto">
+                                <label>
+                                    Kwota
+                                    <input type="number" name="amount" step="0.01" class="form-control">
+                                </label>
+                            </div>
+                            <div class="col-auto">
+                                <label>
+                                    Waluta bazowa
+                                    <select name="base_currency_code" class="form-select">
+                                        <?php
+                                        echo '<option selected value="PLN">PLN</option>';
+                                        foreach ($currencyRows as $currencyRow) {
+                                            echo '<option value="' . $currencyRow['code'] . '">' . $currencyRow['code'] . '</option>';
+                                        }
+                                        ?>
+                                    </select>
+                                </label>
+                                <label>
+                                    Waluta docelowa
+                                    <select name="target_currency_code" class="form-select">
+                                        <?php
+                                        echo '<option value="PLN">PLN</option>';
+                                        foreach ($currencyRows as $currencyRow) {
+                                            if ('EUR' == $currencyRow['code']) {
+                                                echo '<option selected value="' . $currencyRow['code'] . '">' . $currencyRow['code'] . '</option>';
+                                            } else {
+                                                echo '<option value="' . $currencyRow['code'] . '">' . $currencyRow['code'] . '</option>';
+                                            }
+                                        }
+                                        ?>
+                                    </select>
+                                </label>
+                            </div>
+                            <div class="col-auto">
+                                <input type="submit" value="Przelicz" class="btn btn-primary mt-4">
+                            </div>
                         </form>
                     </div>
                     <div class="card">
